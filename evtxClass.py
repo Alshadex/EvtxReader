@@ -41,6 +41,14 @@ class evtxFile:
         return num
 
 
+    def __seek_n_read_Chunk(self, object: list, chunk_num: int ):
+        self.__fp.seek(env.CHUNK_SIZE * chunk_num + env.FHEADER_SIZE + object[0], 0)
+        temp1 = self.__fp.read(object[1])
+        numVal = int.from_bytes(temp1, byteorder='little')
+        return numVal
+
+    def __seek_n_read_Event(self, object: list, event_num: int):
+        self.__fp.seek(env.Chunk)
     # Public Method start here
 
     def getNumOfEvts(self):
@@ -53,10 +61,27 @@ class evtxFile:
         pass
 
     def parseAllEventsToCsv(self):
-        # for chunk in self.__numOfChnks:
-            pass
-        # Size = int.from_bytes(Size, byteorder='big')
-        # self.__AllEvents.append(EventRecord(self.__fp, Size, EvtRcdID, temp2))
+
+        # Goes through every chunk and prints how many event records are stored in the chunk.
+        for chunk in range(self.__numOfChnks):
+            first = self.__seek_n_read_Chunk(env.Chunk.FirstEvtRcdNum, chunk)
+            last = self.__seek_n_read_Chunk(env.Chunk.LastEvtRcdNum, chunk)
+            NumOfRecordsInChunk = last - first + 1
+            print("There are " + str(NumOfRecordsInChunk)+ " event records in Chunk number " + str(chunk+1))
+
+            # Goes through every record.
+            for EventRecord in range(NumOfRecordsInChunk):
+                self.__fp.seek(env.CHUNK_SIZE * chunk + env.FHEADER_SIZE + 512 + env.EventRecordHeader.Size[0], 0)
+                temp = self.__fp.read( env.EventRecordHeader.Size[1])
+                
+                size = int.from_bytes(temp, byteorder='little')
+                print(size)
+
+                self.__fp.seek(env.CHUNK_SIZE * chunk + env.FHEADER_SIZE + 512 + env.EventRecordHeader.EventXML[0], 0)
+                temp = self.__fp.read(size )
+                
+                temp2 = int.from_bytes(temp, byteorder='little')
+                print(temp2)
 
 
     def __exit__(self, exc_type, exc_val, exc_tb):

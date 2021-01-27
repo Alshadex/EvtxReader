@@ -18,14 +18,16 @@ class env:
         #     chunk header (512 Bytes)
         #     array of event records
         #     unused space
-        HeaderSize = 512
+        # HeaderSize = 512
         FirstEvtRcdNum = [8,8]
         LastEvtRcdNum = [16,8]
+        HeaderSize = [40,4]
         LastEvtRcdOffset = [44,4]
         CommonStrOffarray = [128,256] # At offset 128 is the offsets of strings that are common in the event records.
         TemplatePtr = [384,128] # not sure what this is exactly.
 
     class EventRecordHeader:
+        Signature = [0,8]
         Size = [4,4] #  The size of the event record including the signature and the size. Seems like every event record has an arbitrary size.
         EvtRcdID = [8,8]
         DateTime = [16,4]
