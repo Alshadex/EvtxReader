@@ -32,4 +32,4 @@ class env:
         EventXML = [24, None]
 
     class BinaryXml:
-        
+        pass

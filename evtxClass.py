@@ -1,4 +1,3 @@
-import struct
 from environment import env
 from EventRecordClass import EventRecord
 
@@ -28,7 +27,8 @@ class evtxFile:
         '''
         self.__fp.seek(env.FileHeader.NumberOfChunks[0], 0)
         temp = self.__fp.read(env.FileHeader.NumberOfChunks[1])
-        return struct.unpack('H', temp)[0] 
+        num = int.from_bytes(temp, byteorder='little')
+        return num
 
 
     def __countAllEvtRcds(self):
@@ -36,7 +36,9 @@ class evtxFile:
         Return: (int) Total number of Event Records in evtx file
         '''
         self.__fp.seek((self.__numOfChnks-1) * env.CHUNK_SIZE + env.FHEADER_SIZE + env.Chunk.LastEvtRcdNum[0], 0)
-        return struct.unpack('Q', self.__fp.read(env.Chunk.LastEvtRcdNum[1]))[0]
+        temp = self.__fp.read(env.Chunk.LastEvtRcdNum[1])
+        num = int.from_bytes(temp, byteorder='little')
+        return num
 
 
     # Public Method start here
@@ -44,17 +46,17 @@ class evtxFile:
     def getNumOfEvts(self):
         return self.__numOfEvtRcds
 
+    def getNumOfChunks(self):
+        return self.__numOfChnks
+
     def getEvtRcdFromId(self, id):
         pass
 
-    def parseAllEvents(self):
-        self.__fp.seek(env.Chunk.HeaderSize + env.FHEADER_SIZE + env.EventRecordHeader.Size[0], 0)
-        temp = self.__fp.read(env.EventRecordHeader.Size[1])
-        self.__fp.seek(env.Chunk.HeaderSize  +env.FHEADER_SIZE + env.EventRecordHeader.EvtRcdID[0])
-        temp1 = self.__fp.read(env.EventRecordHeader.EvtRcdID[1])
-        self.__fp.seek(env.Chunk.HeaderSize  +env.FHEADER_SIZE + env.EventRecordHeader.DateTime[0])
-        temp2 = self.__fp.read(env.EventRecordHeader.DateTime[1])
-        self.__AllEvents.append(EventRecord(self.__fp, temp, temp1, temp2))
+    def parseAllEventsToCsv(self):
+        # for chunk in self.__numOfChnks:
+            pass
+        # Size = int.from_bytes(Size, byteorder='big')
+        # self.__AllEvents.append(EventRecord(self.__fp, Size, EvtRcdID, temp2))
 
 
     def __exit__(self, exc_type, exc_val, exc_tb):
