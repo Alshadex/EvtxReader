@@ -81,7 +81,13 @@ class evtxFile:
                 temp = self.__fp.read(size )
                 
                 temp2 = int.from_bytes(temp, byteorder='little')
-                print(temp2)
+                # print(temp2)
+
+                self.__fp.seek(env.CHUNK_SIZE * chunk + env.FHEADER_SIZE + 512 + env.EventRecordHeader.DateTime[0], 0)
+                temp3 = self.__fp.read(env.EventRecordHeader.DateTime[1])
+                print(temp3.bin(' '))
+                # with open("temp.out", 'wb') as f:
+                #     f.write(temp2)
 
 
     def __exit__(self, exc_type, exc_val, exc_tb):

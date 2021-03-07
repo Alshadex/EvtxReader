@@ -27,10 +27,10 @@ class env:
         TemplatePtr = [384,128] # not sure what this is exactly.
 
     class EventRecordHeader:
-        Signature = [0,8]
+        Signature = [0,4]
         Size = [4,4] #  The size of the event record including the signature and the size. Seems like every event record has an arbitrary size.
         EvtRcdID = [8,8]
-        DateTime = [16,4]
+        DateTime = [16,8]
         EventXML = [24, None]
 
     class BinaryXml:
