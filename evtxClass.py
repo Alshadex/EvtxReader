@@ -47,8 +47,8 @@ class evtxFile:
         numVal = int.from_bytes(temp1, byteorder='little')
         return numVal
 
-    def __seek_n_read_Event(self, object: list, event_num: int):
-        self.__fp.seek(env.Chunk)
+    # def __seek_n_read_Event(self, object: list, event_num: int):
+    #     self.__fp.seek(env.Chunk)
     # Public Method start here
 
     def getNumOfEvts(self):
@@ -57,8 +57,8 @@ class evtxFile:
     def getNumOfChunks(self):
         return self.__numOfChnks
 
-    def getEvtRcdFromId(self, id):
-        pass
+    # def getEvtRcdFromId(self, id):
+    #     pass
 
     def parseAllEventsToCsv(self):
 
@@ -69,23 +69,40 @@ class evtxFile:
             NumOfRecordsInChunk = last - first + 1
             print("There are " + str(NumOfRecordsInChunk)+ " event records in Chunk number " + str(chunk+1))
 
-            # Goes through every record.
-            for EventRecord in range(NumOfRecordsInChunk):
-                self.__fp.seek(env.CHUNK_SIZE * chunk + env.FHEADER_SIZE + 512 + env.EventRecordHeader.Size[0], 0)
-                temp = self.__fp.read( env.EventRecordHeader.Size[1])
-                
-                size = int.from_bytes(temp, byteorder='little')
-                print(size)
 
-                self.__fp.seek(env.CHUNK_SIZE * chunk + env.FHEADER_SIZE + 512 + env.EventRecordHeader.EventXML[0], 0)
-                temp = self.__fp.read(size )
+            # Goes through every record.
+            # for EventRecord in range(NumOfRecordsInChunk):
+            self.__fp.seek(env.CHUNK_SIZE * chunk + env.FHEADER_SIZE + 512 + env.EventRecordHeader.Size[0], 0)
+            size_bytes = self.__fp.read(env.EventRecordHeader.Size[1])
+            size = int.from_bytes(size_bytes, byteorder='little')
+            # print(size)
+            
+            self.__fp.seek(env.CHUNK_SIZE * chunk + env.FHEADER_SIZE + 512 + env.EventRecordHeader.EvtRcdID[0], 0)
+            id_bytes = self.__fp.read(env.EventRecordHeader.EvtRcdID[1])
+            id = int.from_bytes(id_bytes, byteorder='little')
+            print(f'id: {id}')
+            
+
+
                 
-                temp2 = int.from_bytes(temp, byteorder='little')
+
+
+            
+
+            #     temp = self.__fp.read( env.EventRecordHeader.Size[1])
+                
+            #     size = int.from_bytes(temp, byteorder='little')
+            #     print(size)
+
+            #     self.__fp.seek(env.CHUNK_SIZE * chunk + env.FHEADER_SIZE + 512 + env.EventRecordHeader.EventXML[0], 0)
+            #     temp = self.__fp.read(size )
+                
+            #     temp2 = int.from_bytes(temp, byteorder='little')
                 # print(temp2)
 
-                self.__fp.seek(env.CHUNK_SIZE * chunk + env.FHEADER_SIZE + 512 + env.EventRecordHeader.DateTime[0], 0)
-                temp3 = self.__fp.read(env.EventRecordHeader.DateTime[1])
-                print(temp3.bin(' '))
+                # self.__fp.seek(env.CHUNK_SIZE * chunk + env.FHEADER_SIZE + 512 + env.EventRecordHeader.DateTime[0], 0)
+                # temp3 = self.__fp.read(env.EventRecordHeader.DateTime[1])
+                # print(temp3.bin(' '))
                 # with open("temp.out", 'wb') as f:
                 #     f.write(temp2)
 
