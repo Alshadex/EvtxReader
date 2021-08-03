@@ -69,42 +69,16 @@ class evtxFile:
             NumOfRecordsInChunk = last - first + 1
             print("There are " + str(NumOfRecordsInChunk)+ " event records in Chunk number " + str(chunk+1))
 
-
-            # Goes through every record.
-            # for EventRecord in range(NumOfRecordsInChunk):
+            # for record in range(NumOfRecordsInChunk):
             self.__fp.seek(env.CHUNK_SIZE * chunk + env.FHEADER_SIZE + 512 + env.EventRecordHeader.Size[0], 0)
             size_bytes = self.__fp.read(env.EventRecordHeader.Size[1])
             size = int.from_bytes(size_bytes, byteorder='little')
-            # print(size)
+            print(size)
             
-            self.__fp.seek(env.CHUNK_SIZE * chunk + env.FHEADER_SIZE + 512 + env.EventRecordHeader.EvtRcdID[0], 0)
-            id_bytes = self.__fp.read(env.EventRecordHeader.EvtRcdID[1])
-            id = int.from_bytes(id_bytes, byteorder='little')
-            print(f'id: {id}')
-            
-
-
-                
-
-
-            
-
-            #     temp = self.__fp.read( env.EventRecordHeader.Size[1])
-                
-            #     size = int.from_bytes(temp, byteorder='little')
-            #     print(size)
-
-            #     self.__fp.seek(env.CHUNK_SIZE * chunk + env.FHEADER_SIZE + 512 + env.EventRecordHeader.EventXML[0], 0)
-            #     temp = self.__fp.read(size )
-                
-            #     temp2 = int.from_bytes(temp, byteorder='little')
-                # print(temp2)
-
-                # self.__fp.seek(env.CHUNK_SIZE * chunk + env.FHEADER_SIZE + 512 + env.EventRecordHeader.DateTime[0], 0)
-                # temp3 = self.__fp.read(env.EventRecordHeader.DateTime[1])
-                # print(temp3.bin(' '))
-                # with open("temp.out", 'wb') as f:
-                #     f.write(temp2)
+            print(env.CHUNK_SIZE * chunk + env.FHEADER_SIZE + 512 + (size - env.EventRecordHeader.EventXML[0]))
+            self.__fp.seek(env.CHUNK_SIZE * chunk + env.FHEADER_SIZE + 512 + (size - env.EventRecordHeader.EventXML[0]), 0)
+            with open('eventrecord.xml', 'w') as f:
+                binxml = self.__fp.read(size - env.EventRecordHeader.EventXML[0])
 
 
     def __exit__(self, exc_type, exc_val, exc_tb):
