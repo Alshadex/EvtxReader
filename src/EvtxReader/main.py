@@ -19,3 +19,4 @@ for f in allFiles:
         # print(file.getNumOfChunks())
         # print(file.getNumOfEvts())
         file.parseAllEventsToCsv()
+        

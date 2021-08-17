@@ -21,3 +21,4 @@ class EventRecord:
     
     def getDateTime(self): # check formatting
         return self.__datetime
+        
