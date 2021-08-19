@@ -1,5 +1,5 @@
-from environment import env
-from EventRecordClass import EventRecord
+from .environment import env
+from .EventRecordClass import EventRecord
 
 # This class will become a python module that people can 
 # import into their own code for parsing single evtx files.

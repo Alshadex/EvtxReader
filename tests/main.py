@@ -1,7 +1,6 @@
 import sys
 import struct
-from evtxClass import evtxFile
-from environment import env
+from EvtxReader import evtxFile
 
 
 # print(sys.byteorder)

@@ -1,5 +1,5 @@
 import struct
-from environment import env
+from .environment import env
 
 class EventRecord:
     def __init__(self, fp, size, id, datetime):
