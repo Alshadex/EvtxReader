@@ -1,1 +1,1 @@
-from .evtxClass import evtxFile
+from .EvtxClass import EvtxFile

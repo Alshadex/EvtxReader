@@ -1,6 +1,5 @@
 import sys
-import struct
-from EvtxReader import evtxFile
+from EvtxReader import EvtxFile
 
 
 # print(sys.byteorder)
@@ -13,9 +12,9 @@ if len (sys.argv) < 2 :
 
 allFiles = sys.argv[1:]
 
-for f in allFiles:
-    with evtxFile(f) as file:
-        # print(file.getNumOfChunks())
-        # print(file.getNumOfEvts())
-        file.parseAllEventsToCsv()
-        
+with EvtxFile(allFiles[0]) as test:
+    print(test.get_file_header())
+
+test = EvtxFile(allFiles[0])
+print(test.get_file_header())
+

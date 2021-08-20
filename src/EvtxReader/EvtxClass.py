@@ -1,45 +1,69 @@
 from .environment import env
 from .EventRecordClass import EventRecord
+from .FileHeader import FileHeader
 
 # This class will become a python module that people can 
 # import into their own code for parsing single evtx files.
+# All methods here should be public.
 
-class evtxFile:
+class EvtxFile:
     def __init__(self, filePath):
-        self.__fpPath = filePath
-        self.__AllEvents = []
-
-
+        self.file = open(filePath, 'rb')
+        self.fileheader = FileHeader(self.file)
+        
     def __enter__(self):
-        '''
-        Executed when object is initiated using "with" statement.
-        Need to test without with statement. aka manual opening and closing.
-        '''
-        self.__fp = open(self.__fpPath, 'rb')
-        self.__numOfChnks = self.__getNumOfChnks() # stores the total number of chunks in a single file
-        self.__numOfEvtRcds = self.__countAllEvtRcds() # contains all of the event records as a list
         return self
 
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.file.close()
 
-    def __getNumOfChnks(self):
-        '''
-        Return: (int) Number of Chunks in evtx file
-        '''
-        self.__fp.seek(env.FileHeader.NumberOfChunks[0], 0)
-        temp = self.__fp.read(env.FileHeader.NumberOfChunks[1])
-        num = int.from_bytes(temp, byteorder='little')
-        return num
+    def get_file_header(self) -> dict():
+        return self.fileheader.covert_to_dict()
+
+    def get_Signature(self) -> str:
+        return self.fileheader.get_Signature()
+
+    def get_First_chunk_number(self) -> int:
+        return self.fileheader.get_First_chunk_number()
+
+    def get_Last_chunk_number(self) -> int:
+        return self.fileheader.get_Last_chunk_number()
+
+    def get_Next_record_identifier(self) -> int:
+        return self.fileheader.get_Next_record_identifier()
+
+    def get_Header_size(self) -> int:
+        return self.fileheader.get_Header_size()
+
+    def get_Minor_version(self) -> int:
+        return self.fileheader.get_Minor_version()
+
+    def get_Major_version(self) -> int:
+        return self.fileheader.get_Major_version()
+
+    def get_Header_block_size(self) -> int:
+        return self.fileheader.get_Header_block_size()
+    
+    def get_NumberOfChunks(self) -> int:
+        return self.fileheader.get_NumberOfChunks()
+
+    def get_File_flags(self) -> int:
+        return self.fileheader.get_File_flags()
+
+    def get_Checksum(self) -> int:
+        return self.fileheader.get_Checksum()
 
 
-    def __countAllEvtRcds(self):
+        
+
+    def get_num_records(self) -> int:
         '''
         Return: (int) Total number of Event Records in evtx file
         '''
-        self.__fp.seek((self.__numOfChnks-1) * env.CHUNK_SIZE + env.FHEADER_SIZE + env.Chunk.LastEvtRcdNum[0], 0)
+        self.file.seek((self.__numOfChnks-1) * env.CHUNK_SIZE + env.FHEADER_SIZE + env.Chunk.LastEvtRcdNum[0], 0)
         temp = self.__fp.read(env.Chunk.LastEvtRcdNum[1])
         num = int.from_bytes(temp, byteorder='little')
         return num
-
 
     def __seek_n_read_Chunk(self, object: list, chunk_num: int ):
         self.__fp.seek(env.CHUNK_SIZE * chunk_num + env.FHEADER_SIZE + object[0], 0)
@@ -56,9 +80,6 @@ class evtxFile:
 
     def getNumOfChunks(self):
         return self.__numOfChnks
-
-    # def getEvtRcdFromId(self, id):
-    #     pass
 
     def parseAllEventsToCsv(self):
 
@@ -79,7 +100,3 @@ class evtxFile:
             self.__fp.seek(env.CHUNK_SIZE * chunk + env.FHEADER_SIZE + 512 + (size - env.EventRecordHeader.EventXML[0]), 0)
             with open('eventrecord.xml', 'w') as f:
                 binxml = self.__fp.read(size - env.EventRecordHeader.EventXML[0])
-
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.__fp.close()

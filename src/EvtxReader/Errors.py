@@ -1,0 +1,2 @@
+class FileHeaderException(Exception):
+    pass
