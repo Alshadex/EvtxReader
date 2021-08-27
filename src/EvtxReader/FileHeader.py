@@ -1,11 +1,13 @@
+from .Constants import Constants
 from .Errors import FileHeaderException
 
-OFFSET =   0
-SIZE   =   1
-EXPECTED = 2
 
 class FileHeader:
 
+
+    '''
+    Environment hardcoded offsets for the File Header.
+    '''
     env = {
         'Signature' :                 [0,8,'ElfFile\x00'],
         'First_chunk_number' :        [8,8,None],
@@ -19,8 +21,8 @@ class FileHeader:
         'File_flags' :                [120,4,None],
         'Checksum' :                  [124,4,None]
     }
-        
-    
+
+
     def __init__(self, fp):
         self.file = fp
         self.cache = self.env.copy()
@@ -28,21 +30,21 @@ class FileHeader:
             self.cache[i] = None
 
     def seek_n_read(self, object: list):
-        self.file.seek(object[OFFSET], 0)
-        read_value = self.file.read(object[SIZE])
-        if type(object[EXPECTED]) == type(str()):
+        self.file.seek(object[Constants.OFFSET], 0)
+        read_value = self.file.read(object[Constants.SIZE])
+        if type(object[Constants.EXPECTED]) == type(str()):
             strVal = read_value.decode()
-            if strVal != object[EXPECTED]:
+            if strVal != object[Constants.EXPECTED]:
                 raise FileHeaderException(f'Got {strVal} instead of \
-                                expected value {object[EXPECTED]}\
-                                at offset {object[OFFSET]}')
+                                expected value {object[Constants.EXPECTED]}\
+                                at offset {object[Constants.OFFSET]}')
             return strVal
-        elif type(object[EXPECTED]) == type(int()):
+        elif type(object[Constants.EXPECTED]) == type(int()):
             numVal = int.from_bytes(read_value, byteorder='little')
-            if numVal != object[EXPECTED]:
+            if numVal != object[Constants.EXPECTED]:
                 raise FileHeaderException(f'Got {numVal} instead of \
-                                expected value {object[EXPECTED]}\
-                                at offset {object[OFFSET]}')
+                                expected value {object[Constants.EXPECTED]}\
+                                at offset {object[Constants.OFFSET]}')
             return numVal
         else:
             Val = int.from_bytes(read_value, byteorder='little')
@@ -87,7 +89,7 @@ class FileHeader:
     def get_Checksum(self) -> int:
         self.check_cache('Checksum')
 
-    def covert_to_dict(self) -> dict:
+    def convert_to_dict(self) -> dict:
         for i in self.cache:
             self.check_cache(i)
         return self.cache

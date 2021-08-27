@@ -13,8 +13,8 @@ if len (sys.argv) < 2 :
 allFiles = sys.argv[1:]
 
 with EvtxFile(allFiles[0]) as test:
-    print(test.get_file_header())
-
-test = EvtxFile(allFiles[0])
-print(test.get_file_header())
-
+    print('Printing file header info')
+    print(test.get_File_header())
+    print()
+    print('Printing chunk: 1')
+    print(test.get_Chunk_header(1))
