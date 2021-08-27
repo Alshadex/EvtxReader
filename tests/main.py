@@ -15,6 +15,7 @@ allFiles = sys.argv[1:]
 with EvtxFile(allFiles[0]) as test:
     print('Printing file header info')
     print(test.get_File_header())
-    print()
-    print('Printing chunk: 1')
+    print('\nPrinting chunk: 1')
     print(test.get_Chunk_header(1))
+    print('\nPrinting chunk out of bound:')
+    print(test.get_Chunk_header(1000))
