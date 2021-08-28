@@ -27,8 +27,7 @@ class Chunk:
     def __init__(self, fp):
         self.file = fp
         self.cache = self.env.copy()
-        for i in self.cache:
-            self.cache[i] = None
+        self.cache = dict.fromkeys(self.env, None)
         self.activeChunk = None
         self.eventrecords = EventRecord(fp)
 
@@ -61,8 +60,7 @@ class Chunk:
                 return self.cache[key]
             self.cache[key] = self.seek_n_read(self.env[key], chunk_num)
         else:
-            for i in self.cache:
-                self.cache[i] = None
+            self.cache = dict.fromkeys(self.env, None)
             self.cache[key] = self.seek_n_read(self.env[key], chunk_num)
             self.activeChunk = chunk_num
         return self.cache[key]

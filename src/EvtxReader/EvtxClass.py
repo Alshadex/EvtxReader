@@ -102,8 +102,8 @@ class EvtxFile:
     '''
     Getter for specific event record in specifc chunk.
     '''
-    def get_chunk_Event(self, chunk_num: int, evnt_id: int) -> dict:
-        max_num = self.get_Last_event_record_number(chunk_num)
+    def get_chunk_Event(self, chunk_num: int, event_id: int) -> dict:
+        return self.chunks.get_chunk_Event(chunk_num, event_id)
 
 
 
