@@ -11,4 +11,5 @@ class Constants:
     EXPECTED = 2
 
     FHEADER_SIZE = 4096
+    CHUNK_HEADER = 512
     CHUNK_SIZE = 65536

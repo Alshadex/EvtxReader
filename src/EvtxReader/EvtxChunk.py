@@ -108,4 +108,8 @@ class Chunk:
 
 
     def get_chunk_Event(self, chunk_num: int, event_num: int) -> dict:
-        pass
+        last_id = self.get_Last_event_record_identifier(chunk_num)
+        self.file.seek( Constants.FHEADER_SIZE +
+                        (chunk_num - 1) * Constants.CHUNK_SIZE +
+                        Constants.CHUNK_HEADER, 0)
+        return self.eventrecords.find(event_num, last_id)

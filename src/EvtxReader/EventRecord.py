@@ -1,4 +1,5 @@
 from .Constants import Constants
+from .Errors import FileHeaderException
 
 class EventRecord:
     
@@ -17,11 +18,18 @@ class EventRecord:
     def __init__(self, fp):
         self.file = fp
         self.cache = self.env.copy()
-        for i in self.cache:
-            self.cache[i] = None
+        self.cache = dict.fromkeys(self.env, None)
+
         # self.__size = struct.unpack('I', size)[0]
         # self.__id = struct.unpack('Q', id)[0]
         # self.__datetime = struct.unpack('I', datetime)[0]
 
     def seek_n_read(self, object: list, event_num: int):
         pass
+
+    def find(self, event_num: int, last_id: int) -> dict:
+        for event in range(1,last_id):
+            self.file.seek(self.env['Size'][Constants.OFFSET], 1)
+            event_size = self.file.read(self.env['Size'][Constants.SIZE])
+            event_id = self.file.read(self.env['Event_record_identifier'][Constants.SIZE])
+            
