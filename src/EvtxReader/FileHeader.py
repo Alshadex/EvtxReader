@@ -25,9 +25,7 @@ class FileHeader:
 
     def __init__(self, fp):
         self.file = fp
-        self.cache = self.env.copy()
-        for i in self.cache:
-            self.cache[i] = None
+        self.cache = dict.fromkeys(self.env, None)
 
     def seek_n_read(self, object: list):
         self.file.seek(object[Constants.OFFSET], 0)
@@ -57,37 +55,37 @@ class FileHeader:
         return self.cache[key]
 
     def get_Signature(self) -> str:
-        self.check_cache('Signature')
+        return self.check_cache('Signature')
     
     def get_First_chunk_number(self) -> int:
-        self.check_cache('First_chunk_number')
+        return self.check_cache('First_chunk_number')
     
     def get_Last_chunk_number(self) -> int:
-        self.check_cache('Last_chunk_number')
+        return self.check_cache('Last_chunk_number')
 
     def get_Next_record_identifier(self) -> int:
-        self.check_cache('Next_record_identifier')
+        return self.check_cache('Next_record_identifier')
 
     def get_Header_size(self) -> int:
-        self.check_cache('Header_size')
+        return self.check_cache('Header_size')
 
     def get_Minor_version(self) -> int:
-        self.check_cache('Minor_version')
+        return self.check_cache('Minor_version')
 
     def get_Major_version(self) -> int:
-        self.check_cache('Major_version')
+        return self.check_cache('Major_version')
 
     def get_Header_block_size(self) -> int:
-        self.check_cache('Header_block_size')
+        return self.check_cache('Header_block_size')
     
     def get_NumberOfChunks(self) -> int:
-        self.check_cache('NumberOfChunks')
+        return self.check_cache('NumberOfChunks')
 
     def get_File_flags(self) -> int:
-        self.check_cache('File_flags')
+        return self.check_cache('File_flags')
 
     def get_Checksum(self) -> int:
-        self.check_cache('Checksum')
+        return self.check_cache('Checksum')
 
     def convert_to_dict(self) -> dict:
         for i in self.cache:

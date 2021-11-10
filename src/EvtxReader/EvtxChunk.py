@@ -26,14 +26,13 @@ class Chunk:
 
     def __init__(self, fp):
         self.file = fp
-        self.cache = self.env.copy()
         self.cache = dict.fromkeys(self.env, None)
         self.activeChunk = None
         self.eventrecords = EventRecord(fp)
 
     def seek_n_read(self, object: list, chunk_num: int):
         self.file.seek( Constants.FHEADER_SIZE +
-                        (chunk_num - 1) * Constants.CHUNK_SIZE + 
+                        (chunk_num ) * Constants.CHUNK_SIZE + 
                         object[Constants.OFFSET], 0 )
         read_value = self.file.read(object[Constants.SIZE])
         if type(object[Constants.EXPECTED]) == type(str()):
@@ -66,50 +65,50 @@ class Chunk:
         return self.cache[key]
 
     def get_Signature(self, chunk_num: int) -> str:
-        self.check_cache('Signature', chunk_num)
+        return self.check_cache('Signature', chunk_num)
 
     def get_First_event_record_number(self, chunk_num: int) -> int:
-        self.check_cache('First_event_record_number', chunk_num)
+        return self.check_cache('First_event_record_number', chunk_num)
 
     def get_Last_event_record_number(self, chunk_num: int) -> int:
-        self.check_cache('Last_event_record_number', chunk_num)
+        return self.check_cache('Last_event_record_number', chunk_num)
 
     def get_First_event_record_identifier(self, chunk_num: int) -> int:
-        self.check_cache('First_event_record_identifier', chunk_num)
+        return self.check_cache('First_event_record_identifier', chunk_num)
 
     def get_Last_event_record_identifier(self, chunk_num: int) -> int:
-        self.check_cache('Last_event_record_identifier', chunk_num)
+        return self.check_cache('Last_event_record_identifier', chunk_num)
 
     def get_chunk_Header_size(self, chunk_num: int) -> int:
-        self.check_cache('Header_size', chunk_num)
+        return self.check_cache('Header_size', chunk_num)
 
     def get_Last_event_record_data_offset(self, chunk_num: int) -> int:
-        self.check_cache('Last_event_record_data_offset', chunk_num)
+        return self.check_cache('Last_event_record_data_offset', chunk_num)
 
     def get_Free_space_offset(self, chunk_num: int) -> int:
-        self.check_cache('Free_space_offset', chunk_num)
+        return self.check_cache('Free_space_offset', chunk_num)
 
     def get_Event_records_checksum(self, chunk_num: int) -> int:
-        self.check_cache('Event_records_checksum', chunk_num)
+        return self.check_cache('Event_records_checksum', chunk_num)
 
     def get_Checksum(self, chunk_num: int) -> int:
-        self.check_cache('Checksum', chunk_num)
+        return self.check_cache('Checksum', chunk_num)
 
     def get_Common_string_offset(self, chunk_num: int):
-        self.check_cache('Common_string_offset_array', chunk_num)
+        return self.check_cache('Common_string_offset_array', chunk_num)
 
     def get_TemplatePtr(self, chunk_num: int):
-        self.check_cache('TemplatePtr', chunk_num)
+        return self.check_cache('TemplatePtr', chunk_num)
 
-    def covert_to_dict(self, chunk_num: int) -> dict:
+    def convert_to_dict(self, chunk_num: int) -> dict:
         for i in self.cache:
             self.check_cache(i, chunk_num)
         return self.cache
 
 
-    def get_chunk_Event(self, chunk_num: int, event_num: int) -> dict:
-        last_id = self.get_Last_event_record_identifier(chunk_num)
+    def get_chunk_Event(self, chunk_num: int, event_id: int) -> dict:
+        #last_id = self.get_Last_event_record_identifier(chunk_num)
         self.file.seek( Constants.FHEADER_SIZE +
-                        (chunk_num - 1) * Constants.CHUNK_SIZE +
+                        (chunk_num ) * Constants.CHUNK_SIZE +
                         Constants.CHUNK_HEADER, 0)
-        return self.eventrecords.find(event_num, last_id)
+        return self.eventrecords.find(event_id)

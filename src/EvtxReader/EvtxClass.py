@@ -63,7 +63,7 @@ class EvtxFile:
     Getters for every chunk header.
     '''
     def get_Chunk_header(self, chunk_num: int) -> dict:
-        return self.chunks.covert_to_dict(chunk_num)
+        return self.chunks.convert_to_dict(chunk_num)
 
     def get_chunk_Signature(self, chunk_num: int) -> str:
         return self.chunks.get_Signature(chunk_num)
