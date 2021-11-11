@@ -34,9 +34,19 @@ class EventRecord:
     checks the size of the event and seeks to the next one
     if it is not the one we are searching for
     '''
-    def find(self, event_id: int) -> dict:
-        for i in range(event_id):
+    def find(self, event_num: int) -> dict:
+        for i in range(event_num):
             self.file.seek(self.env['Size'][Constants.OFFSET], 1)
             event_size = struct.unpack('I', self.file.read(self.env['Size'][Constants.SIZE]))[0]
-            print(event_size)
+            event_id = struct.unpack('Q', self.file.read(self.env['Event_record_identifier'][Constants.SIZE]))[0]
+            if event_id == event_num:
+                break
+            self.file.seek(event_size - 16, 1)
+
+        event_dnt = struct.unpack('Q', self.file.read(self.env['Written_date_and_time'][Constants.SIZE]))[0]
+        event_data = self.file.read(event_size - 24)
+        print(event_data)
+
+
+
 
