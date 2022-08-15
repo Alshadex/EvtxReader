@@ -31,6 +31,8 @@ jobs:
           
       - name: pull terraform
         uses: hashicorp/setup-terraform@v2
+        
+      - name: try terraform
         run: terraform init
 
       # Runs a single command using the runners shell
