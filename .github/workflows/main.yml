@@ -33,12 +33,14 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         
       - name: Add .terraformrc
-        run: echo "provider_installation {
+        run: |
+          echo 'provider_installation {
                     dev_overrides {
                     "alkiranet/alkira" = "/home/runner/work/terraform-provider-alkira/terraform-provider-alkira/bin"
                     }
                     direct {}
-                  }" > ~/.terraformrc
+                  }' > ~/.terraformrc
+          cat ~/.terraformrc
                   
       - name: try terraform
         run: terraform init
