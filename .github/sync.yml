@@ -1,7 +1,9 @@
-somename: "alex"
+variables:
+- name: one
+  value: initialValue 
 
 Alshadex/dotfiles:
   - source: test.sh
     template:
       user:
-        name: ((somename))
+        name: $(value)
