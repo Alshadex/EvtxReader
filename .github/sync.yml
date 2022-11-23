@@ -1,9 +1,7 @@
-variables:
-- name: one
-  value: initialValue 
+value: initialValue 
 
 Alshadex/dotfiles:
   - source: test.sh
     template:
       user:
-        name: ${{ variables.value }}
+        name: '{{ value }}'
