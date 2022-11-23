@@ -1,5 +1,7 @@
+somename: "alex"
+
 Alshadex/dotfiles:
   - source: test.sh
     template:
       user:
-        name: 'alex'
+        name: ((somename))
