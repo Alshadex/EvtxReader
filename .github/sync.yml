@@ -6,4 +6,4 @@ Alshadex/dotfiles:
   - source: test.sh
     template:
       user:
-        name: $(value)
+        name: ${{ variables.value }}
