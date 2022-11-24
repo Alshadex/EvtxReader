@@ -1,7 +1,7 @@
-value: initialValue 
-
 Alshadex/dotfiles:
   - source: test.sh
+    dest: neovim/
+    dest: i3/
     template:
       user:
-        name: '{{ value }}'
+        name: 'lmao'
