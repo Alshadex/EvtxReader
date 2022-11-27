@@ -1,7 +1,6 @@
 Alshadex/dotfiles:
   - source: test.sh
-    dest: neovim/
-    dest: i3/
+    dest: neovim/abuild.sh
     template:
       user:
         name: 'lmao'
