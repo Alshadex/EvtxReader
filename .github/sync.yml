@@ -4,3 +4,8 @@ Alshadex/dotfiles:
     template:
       user:
         name: 'lmao'
+  - source: test.sh
+    dest: i3/abuild.sh
+    template:
+      user:
+        name: 'alex'
