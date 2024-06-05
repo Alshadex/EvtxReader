@@ -14,7 +14,7 @@ class BaseTester:
     def __enter__(self):
         self.create_dirs()
         return self
-        
+
 
     def __exit__(self, type, value, tb):
         pass
@@ -29,7 +29,7 @@ class BaseTester:
         if not os.path.isdir(self.vardir):
             os.mkdir(self.vardir)
 
-    
+
     '''
     Saves variable to vars.txt file with
     equal sign as seperator.
@@ -62,7 +62,7 @@ class BaseTester:
         with open('{}/{}.out'.format(self.outdir, testname), 'w') as f:
             f.write(result)
         self.diff_check(testname)
-        
+
 
     def diff_check(self, testname) -> None:
         '''

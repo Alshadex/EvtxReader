@@ -1,14 +1,18 @@
 [project]
 name = "EvtxReader"
-version= "1.0.0"
-description= "Python Module for parsing and reading Windows Evtx files"
-
-
-[tool.setuptools]
-package-dir = {"" = "src"}
-    # directory containing all the packages (e.g.  src/mypkg1, src/mypkg2)
+authors = [{name = "Alex Lin"}]
+license = {file = "LICENSE"}
+classifiers = ["License :: OSI Approved :: MIT License"]
+dynamic = ["version", "description"]
 
 [build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
 
+[project.optional-dependencies]
+test = [ "pytest", "flit" ]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q --file ./tests/evtxfiles/1.evtx"
+testpaths = [ "tests" ]
