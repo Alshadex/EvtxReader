@@ -13,3 +13,18 @@ For development, start a venv and do:
 $ pip3 install -e .
 ```
 This will enable edit mode which is basically a hot reload version.
+
+
+## Testing
+For running pytest, first do:
+```
+$ pip3 install -e .[test]
+```
+Then run:
+```
+$ pytest
+```
+or
+```
+$ pytest --file path/to/file.evtx
+```
