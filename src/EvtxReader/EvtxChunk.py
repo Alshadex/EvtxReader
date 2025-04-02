@@ -4,8 +4,6 @@ from .Errors import FileHeaderException
 
 
 class Chunk:
-    
-
     '''
     environment hardcoded offsets for Chunk object.
     '''
@@ -32,7 +30,7 @@ class Chunk:
 
     def seek_n_read(self, object: list, chunk_num: int):
         self.file.seek( Constants.FHEADER_SIZE +
-                        (chunk_num ) * Constants.CHUNK_SIZE + 
+                        (chunk_num ) * Constants.CHUNK_SIZE +
                         object[Constants.OFFSET], 0 )
         read_value = self.file.read(object[Constants.SIZE])
         if type(object[Constants.EXPECTED]) == type(str()):
@@ -107,7 +105,6 @@ class Chunk:
 
 
     def get_chunk_Event(self, chunk_num: int, event_id: int) -> dict:
-        #last_id = self.get_Last_event_record_identifier(chunk_num)
         self.file.seek( Constants.FHEADER_SIZE +
                         (chunk_num ) * Constants.CHUNK_SIZE +
                         Constants.CHUNK_HEADER, 0)

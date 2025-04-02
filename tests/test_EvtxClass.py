@@ -2,25 +2,6 @@ import pprint
 from EvtxReader import EvtxFile
 from .basetester import BaseTester
 
-# print(sys.byteorder)
-
-
-# if len (sys.argv) < 2 :
-#     print("Usage: python3 main.py <evtx files>")
-#     sys.exit(1)
-
-
-# allFiles = sys.argv[1:]
-
-# with EvtxFile(allFiles[0]) as test:
-#     print('Printing file header info')
-#     print(test.get_File_header())
-#     num = test.get_NumberOfChunks() 
-#     print('\nPrinting all chunks')
-#     for i in range(num):
-#         print(test.get_Chunk_header(i))
-#         print()
-#     print(test.get_chunk_Event(0,1))
 
 def test_get_File_header(evtxFile):
     with EvtxFile(evtxFile) as test:
@@ -39,7 +20,6 @@ def test_get_File_header(evtxFile):
 
 def test_get_Chunk_header(evtxFile):
     with EvtxFile(evtxFile) as test:
-        # pprint.pprint(test.get_Chunk_header(52))
         assert test.get_Chunk_header(0) == {'Checksum': 4275004840,
                                             'Event_records_checksum': 3637811879,
                                             'First_event_record_identifier': 1,
@@ -52,25 +32,59 @@ def test_get_Chunk_header(evtxFile):
                                             'Signature': 'ElfChnk\x00'
                                             }
 
-def test_get_chunk_Event(evtxFile):
+def test_file_header_getters(evtxFile):
     with EvtxFile(evtxFile) as test:
-        pprint.pprint(test.get_chunk_Event(0,2))
-        # assert test.get_chunk_Event(0,1) == {   'EventIdentifier': 1,
-                                            #     'EventRecordId': 1,
-                                            #     'EventSize': 0,
-                                            #     'EventTime': '2019-10-01T00:00:00.000000Z',
-                                            #     'EventType': 'EventLog',
-                                            #     'EventVersion': 1,
-                                            #     'ExecutionProcessId': 0,
-                                            #     'ExecutionThreadId': 0,
-                                            #     'Keywords': 0,
-                                            #     'Level': 4,
-                                            #     'Opcode': 0,
-                                            #     'ProviderId': '{00000000-0000-0000-0000-000000000000}',
-                                            #     'ProviderName': 'Microsoft-Windows-Eventlog',
-                                            #     'Qualifiers': 0,
-                                            #     'RecordNumber': 1,
-                                            #     'Task': 0,
-                                            #     'TimeCreated': '201,
-                                            #     'Version': 0
-                                            # }
+        # Test all file header getters
+        assert test.get_Signature() == 'ElfFile\x00'
+        assert test.get_First_chunk_number() == 0
+        assert test.get_Last_chunk_number() == 52
+        assert test.get_Next_record_identifier() == 5660
+        assert test.get_Header_size() == 128
+        assert test.get_Minor_version() == 1
+        assert test.get_Major_version() == 3
+        assert test.get_Header_block_size() == 4096
+        assert test.get_NumberOfChunks() == 53
+        assert test.get_File_flags() == 0
+        assert test.get_Checksum() == 3014202741
+
+def test_chunk_header_getters(evtxFile):
+    with EvtxFile(evtxFile) as test:
+        chunk_num = 0
+        # Test all chunk header getters
+        assert test.get_chunk_Signature(chunk_num) == 'ElfChnk\x00'
+        assert test.get_First_event_record_number(chunk_num) == 1
+        assert test.get_Last_event_record_number(chunk_num) == 118
+        assert test.get_First_event_record_identifier(chunk_num) == 1
+        assert test.get_Last_event_record_identifier(chunk_num) == 118
+        assert test.get_chunk_Header_size(chunk_num) == 128
+        assert test.get_Last_event_record_data_offset(chunk_num) == 64640
+        assert test.get_Free_space_offset(chunk_num) == 65224
+        assert test.get_Event_records_checksum(chunk_num) == 3637811879
+
+def test_context_manager(evtxFile):
+    # Test that the file is properly closed after use
+    with EvtxFile(evtxFile) as test:
+        assert not test.file.closed
+    # After the with block, the file should be closed
+    with EvtxFile(evtxFile) as test:
+        test.file.close()
+        assert test.file.closed
+
+def test_invalid_chunk_number(evtxFile):
+    with EvtxFile(evtxFile) as test:
+        # Test with an invalid chunk number
+        invalid_chunk = test.get_NumberOfChunks() + 1
+        try:
+            test.get_Chunk_header(invalid_chunk)
+            assert False, "Should have raised an exception for invalid chunk number"
+        except Exception:
+            assert True
+
+def test_invalid_event_number(evtxFile):
+    with EvtxFile(evtxFile) as test:
+        # Test with an invalid event number
+        try:
+            test.get_chunk_Event(0, 999999)
+            assert False, "Should have raised an exception for invalid event number"
+        except Exception:
+            assert True

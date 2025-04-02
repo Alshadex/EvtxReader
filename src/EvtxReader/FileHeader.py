@@ -3,8 +3,6 @@ from .Errors import FileHeaderException
 
 
 class FileHeader:
-
-
     '''
     Environment hardcoded offsets for the File Header.
     '''
@@ -56,10 +54,10 @@ class FileHeader:
 
     def get_Signature(self) -> str:
         return self.check_cache('Signature')
-    
+
     def get_First_chunk_number(self) -> int:
         return self.check_cache('First_chunk_number')
-    
+
     def get_Last_chunk_number(self) -> int:
         return self.check_cache('Last_chunk_number')
 
@@ -77,7 +75,7 @@ class FileHeader:
 
     def get_Header_block_size(self) -> int:
         return self.check_cache('Header_block_size')
-    
+
     def get_NumberOfChunks(self) -> int:
         return self.check_cache('NumberOfChunks')
 
